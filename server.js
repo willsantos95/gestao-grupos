@@ -141,15 +141,50 @@ app.get("/", (req, res) => {
  * =========================
  */
 
-// Listar origens
+// Listar origens com filtros
 app.get("/api/origins", async (req, res) => {
+  const origin_key = (req.query.origin_key || "").trim().toLowerCase();
+  const niche = (req.query.niche || "").trim().toLowerCase();
+  const status = (req.query.status || "").trim().toLowerCase();
+  const name = (req.query.name || "").trim().toLowerCase();
+
   try {
-    const { rows } = await pool.query(`
+    let query = `
       SELECT id, origin_key, name, niche, status, created_at, updated_at
       FROM message_origins
-      ORDER BY id DESC
-    `);
+      WHERE 1=1
+    `;
 
+    const params = [];
+    let paramIndex = 1;
+
+    if (origin_key) {
+      query += ` AND LOWER(origin_key) = $${paramIndex}`;
+      params.push(origin_key);
+      paramIndex++;
+    }
+
+    if (niche) {
+      query += ` AND LOWER(niche) = $${paramIndex}`;
+      params.push(niche);
+      paramIndex++;
+    }
+
+    if (status) {
+      query += ` AND LOWER(status) = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+
+    if (name) {
+      query += ` AND LOWER(name) LIKE $${paramIndex}`;
+      params.push(`%${name}%`);
+      paramIndex++;
+    }
+
+    query += ` ORDER BY id DESC`;
+
+    const { rows } = await pool.query(query, params);
     return res.json(rows);
   } catch (error) {
     return res.status(500).json({
@@ -305,15 +340,50 @@ app.delete("/api/origins/:id", async (req, res) => {
  * =========================
  */
 
-// Listar grupos
+// Listar grupos com filtros
 app.get("/api/groups", async (req, res) => {
+  const niche = (req.query.niche || "").trim().toLowerCase();
+  const status = (req.query.status || "").trim().toLowerCase();
+  const slug = (req.query.slug || "").trim().toLowerCase();
+  const name = (req.query.name || "").trim().toLowerCase();
+
   try {
-    const { rows } = await pool.query(`
+    let query = `
       SELECT id, slug, name, niche, group_code, status, created_at, updated_at
       FROM target_groups
-      ORDER BY id DESC
-    `);
+      WHERE 1=1
+    `;
 
+    const params = [];
+    let paramIndex = 1;
+
+    if (niche) {
+      query += ` AND LOWER(niche) = $${paramIndex}`;
+      params.push(niche);
+      paramIndex++;
+    }
+
+    if (status) {
+      query += ` AND LOWER(status) = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+
+    if (slug) {
+      query += ` AND LOWER(slug) = $${paramIndex}`;
+      params.push(slug);
+      paramIndex++;
+    }
+
+    if (name) {
+      query += ` AND LOWER(name) LIKE $${paramIndex}`;
+      params.push(`%${name}%`);
+      paramIndex++;
+    }
+
+    query += ` ORDER BY id DESC`;
+
+    const { rows } = await pool.query(query, params);
     return res.json(rows);
   } catch (error) {
     return res.status(500).json({
