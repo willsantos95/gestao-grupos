@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    container_name: relampago-manager-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: relampago
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      BASE_LINK_URL: https://link.relampagodeofertas.shop
+      ADMIN_TITLE: Relâmpago Manager
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: relampago-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: relampago
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+
+volumes:
+  postgres_data:
