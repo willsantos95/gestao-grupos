@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relâmpago Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1>Relâmpago Manager</h1>
+        <p>Painel de cadastro e manutenção de origens e grupos com PostgreSQL.</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="alert" class="alert"></div>
+
+      <div class="grid">
+        <section class="panel">
+          <div class="section-title">
+            <h2 id="originFormTitle">Nova origem</h2>
+            <button id="originResetBtn" class="secondary">Limpar</button>
+          </div>
+          <p class="helper">Use a chave de origem que o n8n enviará em <code>origin_key</code>.</p>
+          <form id="originForm">
+            <input type="hidden" id="origin_id" />
+
+            <label for="origin_key">ID / Chave da origem</label>
+            <input id="origin_key" placeholder="ex: origem_pet" required />
+
+            <label for="origin_name">Nome</label>
+            <input id="origin_name" placeholder="ex: Canal Telegram Pet" required />
+
+            <label for="origin_niche">Nicho</label>
+            <select id="origin_niche">
+              <option value="geral">geral</option>
+              <option value="pet">pet</option>
+              <option value="bebe">bebe</option>
+            </select>
+
+            <label for="origin_status">Status</label>
+            <select id="origin_status">
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+
+            <button type="submit" class="primary">Salvar origem</button>
+          </form>
+        </section>
+
+        <section class="panel table-wrap">
+          <h2>Origens cadastradas</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Chave</th>
+                <th>Nome</th>
+                <th>Nicho</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="originsTableBody"></tbody>
+          </table>
+        </section>
+      </div>
+
+      <div class="grid" style="margin-top: 24px;">
+        <section class="panel table-wrap">
+          <h2>Grupos cadastrados</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Slug</th>
+                <th>Nome</th>
+                <th>Nicho</th>
+                <th>Group Code</th>
+                <th>Link</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="groupsTableBody"></tbody>
+          </table>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2 id="groupFormTitle">Novo grupo</h2>
+            <button id="groupResetBtn" class="secondary">Limpar</button>
+          </div>
+          <p class="helper">O <code>slug</code> será usado no link público. O <code>group_code</code> é o código real do grupo, como <code>120363424011546207@g.us</code>.</p>
+          <form id="groupForm">
+            <input type="hidden" id="group_id" />
+
+            <label for="group_slug">Slug</label>
+            <input id="group_slug" placeholder="ex: pet" required />
+
+            <label for="group_name">Nome</label>
+            <input id="group_name" placeholder="ex: Grupo Pet" required />
+
+            <label for="group_niche">Nicho</label>
+            <select id="group_niche">
+              <option value="geral">geral</option>
+              <option value="pet">pet</option>
+              <option value="bebe">bebe</option>
+            </select>
+
+            <label for="group_code">ID real do grupo</label>
+            <input id="group_code" placeholder="ex: 120363424011546207@g.us" required />
+
+            <label for="group_status">Status</label>
+            <select id="group_status">
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+
+            <button type="submit" class="primary">Salvar grupo</button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <script src="/admin/app.js"></script>
+  </body>
+</html>
